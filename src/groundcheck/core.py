@@ -86,12 +86,13 @@ def check_answer(
             score = _overlap_score(claim, context)
             if score > best_score:
                 best_context, best_score = context, score
+        is_supported = best_context is not None and best_score >= threshold
         results.append(
             ClaimResult(
                 claim=claim,
-                status="supported" if best_score >= threshold else "needs_review",
+                status="supported" if is_supported else "needs_review",
                 score=round(best_score, 4),
-                evidence=best_context if best_score >= threshold else None,
+                evidence=best_context if is_supported else None,
             )
         )
 

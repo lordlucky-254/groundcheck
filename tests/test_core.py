@@ -27,6 +27,15 @@ def test_empty_context_flags_claim_for_review():
     assert report.claims[0].score == 0
 
 
+def test_zero_threshold_does_not_support_claim_without_overlap():
+    report = check_answer("A claim without evidence.", [], threshold=0)
+
+    assert report.supported == 0
+    assert report.needs_review == 1
+    assert report.claims[0].status == "needs_review"
+    assert report.claims[0].evidence is None
+
+
 @pytest.mark.parametrize("threshold", [-0.1, 1.1])
 def test_rejects_threshold_outside_unit_interval(threshold):
     with pytest.raises(ValueError, match="threshold"):
